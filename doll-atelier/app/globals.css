@@ -1,0 +1,480 @@
+/* ---------------------------------------------------------
+   Crochi by Queen — Modern Premium Design Tokens
+   Inspired by clean modern e-commerce dashboard designs
+   featuring sleek layouts, green accents, and subtle borders.
+--------------------------------------------------------- */
+
+:root {
+  --bg-app: #f5f7f5;
+  --bg-card: #ffffff;
+  --bg-sidebar: #ffffff;
+  --bg-active: #eef4f0;
+  --text-main: #233329;
+  --text-soft: #5e6d64;
+  --brand-purple: #51755e;
+  --brand-purple-hover: #3d5947;
+  --line: #e3ebd8;
+  
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  
+  --shadow-subtle: 0 4px 12px rgba(81, 117, 94, 0.02), 0 1px 3px rgba(0, 0, 0, 0.02);
+  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.02);
+  --shadow-active: 0 4px 12px rgba(81, 117, 94, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  background: var(--bg-app);
+  color: var(--text-main);
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+.display {
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.mono {
+  font-family: var(--font-mono), monospace;
+  letter-spacing: 0.02em;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brand-purple);
+  outline-offset: 2px;
+}
+
+/* ---------- Premium Dashboard Layout ---------- */
+
+.shop-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr 420px;
+  min-height: 100vh;
+  background: var(--bg-app);
+}
+
+.shop-layout-two-columns {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+  background: var(--bg-app);
+}
+
+.sidebar {
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--line);
+  padding: 36px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.center-pane {
+  padding: 36px 40px;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.details-pane {
+  background: var(--bg-sidebar);
+  border-left: 1px solid var(--line);
+  padding: 36px 32px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Responsive collapse rules */
+@media (max-width: 1200px) {
+  .shop-layout {
+    grid-template-columns: 220px 1fr 340px;
+  }
+}
+
+@media (max-width: 992px) {
+  .shop-layout {
+    grid-template-columns: 240px 1fr;
+  }
+  .details-pane {
+    display: none; /* Will stack underneath or load as full view in dynamic navigation */
+  }
+}
+
+@media (max-width: 768px) {
+  .shop-layout {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    display: none; /* Mobile header navigation instead */
+  }
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 12px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background: var(--brand-purple);
+  color: #ffffff;
+}
+.btn-primary:hover {
+  background: var(--brand-purple-hover);
+  box-shadow: 0 4px 12px rgba(92, 62, 163, 0.2);
+}
+
+.btn-thread {
+  background: var(--brand-purple);
+  color: #ffffff;
+}
+.btn-thread:hover {
+  background: var(--brand-purple-hover);
+  box-shadow: 0 4px 12px rgba(92, 62, 163, 0.2);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-main);
+  border: 1px solid var(--line);
+}
+.btn-ghost:hover {
+  background: var(--bg-app);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+/* ---------- Cards ---------- */
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-subtle);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
+}
+
+.card.selected {
+  border-color: var(--brand-purple);
+  box-shadow: 0 0 0 1px var(--brand-purple), var(--shadow-card);
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+}
+
+/* ---------- Search and Filters ---------- */
+
+.search-container {
+  display: flex;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 10px 16px;
+  gap: 12px;
+  align-items: center;
+  box-shadow: var(--shadow-subtle);
+}
+
+.search-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+}
+
+.search-input::placeholder {
+  color: var(--text-soft);
+}
+
+.categories-container {
+  margin: 24px 0;
+}
+
+.categories-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.category-pill {
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  color: var(--text-soft);
+  font-weight: 500;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.category-pill:hover {
+  background: var(--bg-app);
+  color: var(--text-main);
+}
+
+.category-pill.active {
+  background: var(--brand-purple);
+  color: #ffffff;
+  border-color: var(--brand-purple);
+}
+
+/* ---------- Forms ---------- */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-soft);
+}
+
+.field input,
+.field textarea,
+.field select {
+  font-family: inherit;
+  font-size: 14px;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  color: var(--text-main);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  border-color: var(--brand-purple);
+  box-shadow: 0 0 0 1px var(--brand-purple);
+}
+
+.error-text {
+  color: #c92a2a;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+/* ---------- Profile Avatar ---------- */
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: var(--radius-md);
+  background: var(--bg-app);
+}
+
+.profile-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--brand-purple);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+/* ---------- Rating Stars ---------- */
+.rating-stars {
+  display: flex;
+  gap: 2px;
+  color: var(--brand-purple);
+  font-size: 14px;
+}
+
+/* ---------- Order tracking: stitched seam timeline ---------- */
+
+.seam-track {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  margin: 28px 0;
+}
+
+.seam-step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  text-align: center;
+}
+
+.seam-line {
+  position: absolute;
+  top: 9px;
+  left: -50%;
+  width: 100%;
+  height: 2px;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--line) 0,
+    var(--line) 6px,
+    transparent 6px,
+    transparent 12px
+  );
+  z-index: 0;
+}
+
+.seam-step:first-child .seam-line {
+  display: none;
+}
+
+.seam-line.done {
+  background-image: none;
+  background-color: var(--brand-purple);
+}
+
+.seam-knot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  background: var(--bg-card);
+  z-index: 1;
+}
+
+.seam-knot.done {
+  background: var(--brand-purple);
+  border-color: var(--brand-purple);
+}
+
+.seam-knot.current {
+  background: var(--brand-purple);
+  border-color: var(--brand-purple);
+  box-shadow: 0 0 0 4px rgba(92, 62, 163, 0.15);
+}
+
+.seam-step-label {
+  margin-top: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-soft);
+}
+
+.seam-step-label.active {
+  color: var(--text-main);
+}
+
+/* ---------- Locked video badge ---------- */
+
+.locked-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--text-main);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.stitch-divider {
+  border: none;
+  height: 1px;
+  background: var(--line);
+  margin: 28px 0;
+}
+
+/* ---------- Navigation lists ---------- */
+.nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  color: var(--text-soft);
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.nav-item:hover {
+  background: var(--bg-app);
+  color: var(--text-main);
+}
+
+.nav-item.active {
+  background: var(--bg-active);
+  color: var(--brand-purple);
+  font-weight: 600;
+}

@@ -1,0 +1,99 @@
+// Doll Atelier — data model
+// SQLite for local dev. Swap "provider" to "postgresql" for production
+// (Railway/Supabase/Neon all work) and update DATABASE_URL — no other code changes needed.
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("CUSTOMER")
+  createdAt    DateTime @default(now())
+
+  orders       Order[]
+  videoAccess  VideoAccess[]
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  priceInPaise Int     // store money as integer paise/cents — avoids float bugs
+  photoUrl    String
+  stock       Int      @default(1)
+  createdAt   DateTime @default(now())
+
+  orderItems  OrderItem[]
+}
+
+model Order {
+  id            String        @id @default(cuid())
+  customer      User          @relation(fields: [customerId], references: [id])
+  customerId    String
+  status        String        @default("PLACED")
+  totalInPaise  Int
+  shippingName  String
+  shippingAddr  String
+  shippingPhone String
+  createdAt     DateTime      @default(now())
+
+  items         OrderItem[]
+  statusLog     OrderStatusEvent[]
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  order     Order   @relation(fields: [orderId], references: [id])
+  orderId   String
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+  quantity  Int
+  priceInPaise Int  // price at time of purchase
+}
+
+// Every status change is logged so the tracking timeline can show dates, not just current state
+model OrderStatusEvent {
+  id        String      @id @default(cuid())
+  order     Order       @relation(fields: [orderId], references: [id])
+  orderId   String
+  status    String
+  note      String?
+  createdAt DateTime    @default(now())
+}
+
+model Video {
+  id           String   @id @default(cuid())
+  title        String
+  description  String
+  priceInPaise Int
+  thumbnailUrl String
+  // sourcePath: where the *actual* video file lives. In dev this is a local
+  // path under /private-videos. In production, swap for a Cloudflare Stream /
+  // Mux asset ID and change lib/video.js accordingly — the rest of the app
+  // (purchase gating, the player page) does not need to change.
+  sourcePath   String
+  createdAt    DateTime @default(now())
+
+  access       VideoAccess[]
+}
+
+// Created the moment a customer pays for a video. Its presence IS the access check.
+model VideoAccess {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  video     Video    @relation(fields: [videoId], references: [id])
+  videoId   String
+  grantedAt DateTime @default(now())
+
+  @@unique([userId, videoId])
+}
