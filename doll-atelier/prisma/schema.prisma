@@ -3,7 +3,7 @@
 // (Railway/Supabase/Neon all work) and update DATABASE_URL — no other code changes needed.
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
