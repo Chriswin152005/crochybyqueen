@@ -183,7 +183,7 @@ button {
   gap: 16px;
 }
 
-@media (max-width: 576px) {
+@media (max-width: 768px) {
   .form-row-two-columns {
     grid-template-columns: 1fr;
     gap: 12px;
@@ -506,6 +506,8 @@ button {
 .field input,
 .field textarea,
 .field select {
+  width: 100%;
+  max-width: 100%;
   font-family: inherit;
   font-size: 14px;
   padding: 11px 13px;
