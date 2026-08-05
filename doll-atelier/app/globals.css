@@ -119,7 +119,60 @@ button {
   flex-direction: column;
 }
 
-/* Responsive collapse rules */
+/* ---------- Site Header for Login/Register ---------- */
+.site-header {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--line);
+  padding: 16px 24px;
+}
+
+.site-header .container nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.site-header .logo {
+  font-weight: 700;
+  color: var(--brand-purple);
+  font-size: 16px;
+  letter-spacing: -0.02em;
+}
+
+.site-header .nav-links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-soft);
+}
+
+.site-header .nav-links a:hover {
+  color: var(--text-main);
+}
+
+/* ---------- Mobile Responsive Layout & Drawer ---------- */
+
+.mobile-top-header {
+  display: none;
+}
+
+.mobile-menu-close {
+  display: none;
+}
+
+/* Helper utilities */
+.mobile-only {
+  display: none !important;
+}
+
+.mobile-only-inline-flex {
+  display: none !important;
+}
+
 @media (max-width: 1200px) {
   .shop-layout {
     grid-template-columns: 220px 1fr 340px;
@@ -130,17 +183,154 @@ button {
   .shop-layout {
     grid-template-columns: 240px 1fr;
   }
-  .details-pane {
-    display: none; /* Will stack underneath or load as full view in dynamic navigation */
+  
+  /* Collapsing columns list-to-detail toggle based on selection state */
+  .shop-layout:not(.has-selection) .details-pane {
+    display: none !important;
+  }
+  .shop-layout.has-selection .center-pane {
+    display: none !important;
+  }
+  .shop-layout.has-selection .details-pane {
+    display: block !important;
+    border-left: none !important;
+    width: 100% !important;
+    padding: 24px 16px !important;
+    height: auto !important;
+    position: relative !important;
+  }
+  
+  /* Cart mobile helper toggles */
+  .hidden-mobile {
+    display: none !important;
+  }
+  .show-mobile-full {
+    display: block !important;
+    border-left: none !important;
+    width: 100% !important;
+    padding: 24px 16px !important;
+    height: auto !important;
+    position: relative !important;
+  }
+
+  .mobile-only {
+    display: block !important;
+  }
+  .mobile-only-inline-flex {
+    display: inline-flex !important;
   }
 }
 
 @media (max-width: 768px) {
-  .shop-layout {
-    grid-template-columns: 1fr;
+  /* Layout stacks vertically on mobile under the sticky mobile header */
+  .shop-layout,
+  .shop-layout-two-columns {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
   }
+
+  .center-pane,
+  .details-pane {
+    padding: 20px 16px !important;
+    height: auto !important;
+    overflow-y: visible !important;
+  }
+
+  /* Sidebar drawer functionality on mobile screen sizes */
   .sidebar {
-    display: none; /* Mobile header navigation instead */
+    display: flex !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    background: var(--bg-sidebar);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 100;
+    height: 100vh;
+    padding: 24px 16px;
+    border-right: 1px solid var(--line);
+  }
+
+  /* Checkbox hack to open sidebar menu drawer */
+  #menu-toggle:checked ~ .sidebar {
+    transform: translateX(0);
+  }
+
+  /* Overlay backdrop for open drawer */
+  .menu-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(35, 51, 41, 0.4);
+    backdrop-filter: blur(2px);
+    z-index: 99;
+  }
+
+  #menu-toggle:checked ~ .menu-backdrop {
+    display: block;
+  }
+
+  /* Mobile Top Header Navigation Bar styling */
+  .mobile-top-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    background: var(--bg-sidebar);
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    z-index: 90;
+    height: 60px;
+    width: 100%;
+    box-shadow: 0 2px 8px rgba(81, 117, 94, 0.04);
+  }
+
+  .menu-burger-btn {
+    font-size: 24px;
+    color: var(--text-main);
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobile-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--brand-purple);
+    letter-spacing: -0.02em;
+  }
+
+  .mobile-logo {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+  }
+
+  /* Close button at the top-right of mobile drawer menu */
+  .mobile-menu-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    width: 32px;
+    height: 32px;
+    font-size: 20px;
+    color: var(--text-soft);
+    cursor: pointer;
   }
 }
 

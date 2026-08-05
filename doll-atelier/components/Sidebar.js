@@ -9,6 +9,11 @@ export default function Sidebar({ activePage }) {
 
   return (
     <aside className="sidebar">
+      {/* Mobile Close Button */}
+      <label htmlFor="menu-toggle" className="mobile-menu-close" aria-label="Close Menu">
+        ✕
+      </label>
+
       <div>
         {/* Logo/Brand */}
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 40 }}>
