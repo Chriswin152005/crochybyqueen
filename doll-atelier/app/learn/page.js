@@ -41,10 +41,18 @@ export default async function LearnPage({ searchParams }) {
 
   const selectedId = searchParams.video;
   const selectedVideo = videos.find(v => v.id === selectedId) || filteredVideos[0];
+  const hasSelection = !!selectedId;
   const categories = ["All", "Pattern Cut", "Sewing", "Stuffing", "Detailing"];
 
+  // Compute back URL for mobile
+  let backUrl = "/learn";
+  const backParams = [];
+  if (activeCategory !== "All") backParams.push(`category=${encodeURIComponent(activeCategory)}`);
+  if (searchQuery) backParams.push(`q=${encodeURIComponent(searchQuery)}`);
+  if (backParams.length > 0) backUrl += `?${backParams.join("&")}`;
+
   return (
-    <ShopLayout activePage="videos" threeColumns={true}>
+    <ShopLayout activePage="videos" threeColumns={true} hasSelection={hasSelection}>
       {/* Center column: video catalog */}
       <div className="center-pane">
         {/* Search */}
@@ -144,6 +152,13 @@ export default async function LearnPage({ searchParams }) {
       <div className="details-pane">
         {selectedVideo ? (
           <div>
+            {/* Mobile Back Button */}
+            <div className="mobile-only" style={{ marginBottom: 20 }}>
+              <Link href={backUrl} className="btn btn-ghost" style={{ width: "100%", justifyContent: "flex-start", gap: 8 }}>
+                ← Back to workshops
+              </Link>
+            </div>
+
             <h1 style={{ fontSize: 22, fontWeight: 700, marginBottom: 12 }}>{selectedVideo.title}</h1>
             
             {/* Video Player or Locked Banner */}

@@ -25,8 +25,10 @@ export default async function AdminPage({ searchParams }) {
     }),
   ]);
 
+  const hasSelection = searchParams.action === "add";
+
   return (
-    <ShopLayout activePage="admin" threeColumns={true}>
+    <ShopLayout activePage="admin" threeColumns={true} hasSelection={hasSelection}>
       {/* Center column: lists */}
       <div className="center-pane">
         <h1 style={{ fontSize: 24, marginBottom: 6 }}>Owner Dashboard</h1>
@@ -50,7 +52,12 @@ export default async function AdminPage({ searchParams }) {
         {/* Dynamic Lists */}
         {activeTab === "dolls" && (
           <section>
-            <h2 style={{ fontSize: 18, marginBottom: 18 }}>Doll Listings</h2>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
+              <h2 style={{ fontSize: 18, margin: 0 }}>Doll Listings</h2>
+              <Link href="/admin?tab=dolls&action=add" className="btn btn-primary mobile-only-inline-flex" style={{ padding: "8px 16px", fontSize: 13 }}>
+                + Add Doll
+              </Link>
+            </div>
             <div style={{ display: "grid", gap: 12 }}>
               {products.length === 0 ? (
                 <p style={{ color: "var(--text-soft)" }}>No dolls listed yet. Use the form on the right to list one.</p>
@@ -74,7 +81,12 @@ export default async function AdminPage({ searchParams }) {
 
         {activeTab === "videos" && (
           <section>
-            <h2 style={{ fontSize: 18, marginBottom: 18 }}>Workshop Videos</h2>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
+              <h2 style={{ fontSize: 18, margin: 0 }}>Workshop Videos</h2>
+              <Link href="/admin?tab=videos&action=add" className="btn btn-primary mobile-only-inline-flex" style={{ padding: "8px 16px", fontSize: 13 }}>
+                + Add Video
+              </Link>
+            </div>
             <div style={{ display: "grid", gap: 12 }}>
               {videos.length === 0 ? (
                 <p style={{ color: "var(--text-soft)" }}>No videos uploaded yet. Use the form on the right to add one.</p>
@@ -98,6 +110,26 @@ export default async function AdminPage({ searchParams }) {
 
         {activeTab === "orders" && (
           <section>
+            {/* Mobile-only stats overview */}
+            <div className="mobile-only" style={{ marginBottom: 20 }}>
+              <div style={{ background: "var(--bg-card)", border: "1px solid var(--line)", borderRadius: "var(--radius-md)", padding: 16, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                <div style={{ gridColumn: "span 2" }}>
+                  <div style={{ fontSize: 12, color: "var(--text-soft)", marginBottom: 4 }}>Total Revenue</div>
+                  <div className="mono" style={{ fontSize: 20, fontWeight: 700, color: "var(--brand-purple)" }}>
+                    {formatRupees(orders.reduce((sum, o) => sum + o.totalInPaise, 0))}
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontSize: 11, color: "var(--text-soft)" }}>Total Orders</div>
+                  <div style={{ fontSize: 14, fontWeight: 700 }}>{orders.length}</div>
+                </div>
+                <div>
+                  <div style={{ fontSize: 11, color: "var(--text-soft)" }}>Pending</div>
+                  <div style={{ fontSize: 14, fontWeight: 700 }}>{orders.filter(o => o.status !== "DELIVERED").length}</div>
+                </div>
+              </div>
+            </div>
+
             <h2 style={{ fontSize: 18, marginBottom: 18 }}>Customer Orders</h2>
             <OrdersTable orders={orders} />
           </section>
@@ -108,6 +140,12 @@ export default async function AdminPage({ searchParams }) {
       <div className="details-pane">
         {activeTab === "dolls" && (
           <div>
+            {/* Mobile Back Button */}
+            <div className="mobile-only" style={{ marginBottom: 20 }}>
+              <Link href="/admin?tab=dolls" className="btn btn-ghost" style={{ width: "100%", justifyContent: "flex-start", gap: 8 }}>
+                ← Back to Listings
+              </Link>
+            </div>
             <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>Add New Doll</h2>
             <p style={{ color: "var(--text-soft)", fontSize: 13, marginBottom: 24 }}>List a new doll listing to the collection shop.</p>
             <AddProductForm />
@@ -116,6 +154,12 @@ export default async function AdminPage({ searchParams }) {
 
         {activeTab === "videos" && (
           <div>
+            {/* Mobile Back Button */}
+            <div className="mobile-only" style={{ marginBottom: 20 }}>
+              <Link href="/admin?tab=videos" className="btn btn-ghost" style={{ width: "100%", justifyContent: "flex-start", gap: 8 }}>
+                ← Back to Listings
+              </Link>
+            </div>
             <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>Add Workshop Video</h2>
             <p style={{ color: "var(--text-soft)", fontSize: 13, marginBottom: 24 }}>Upload a new video for gated workshop learning.</p>
             <AddVideoForm />

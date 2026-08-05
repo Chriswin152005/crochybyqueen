@@ -64,7 +64,7 @@ export default function AddProductForm() {
 
   return (
     <form onSubmit={handleSubmit} className="card" style={{ padding: 20 }}>
-      <div className="form-grid-2">
+      <div className="form-row-two-columns">
         <div className="field">
           <label>Doll name</label>
           <input value={name} onChange={(e) => setName(e.target.value)} required />
@@ -78,7 +78,7 @@ export default function AddProductForm() {
         <label>Description</label>
         <textarea rows={3} value={description} onChange={(e) => setDescription(e.target.value)} required />
       </div>
-      <div className="form-grid-2">
+      <div className="form-row-two-columns">
         <div className="field">
           <label>Stock</label>
           <input type="number" min={0} value={stock} onChange={(e) => setStock(e.target.value)} />

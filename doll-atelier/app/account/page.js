@@ -19,9 +19,10 @@ export default async function AccountPage({ searchParams }) {
 
   const selectedId = searchParams.order;
   const selectedOrder = orders.find(o => o.id === selectedId) || orders[0];
+  const hasSelection = !!selectedId;
 
   return (
-    <ShopLayout activePage="orders" threeColumns={true}>
+    <ShopLayout activePage="orders" threeColumns={true} hasSelection={hasSelection}>
       {/* Center column: orders list */}
       <div className="center-pane">
         <h1 style={{ fontSize: 24, marginBottom: 6 }}>Your Orders</h1>
@@ -69,6 +70,13 @@ export default async function AccountPage({ searchParams }) {
       <div className="details-pane">
         {selectedOrder ? (
           <div>
+            {/* Mobile Back Button */}
+            <div className="mobile-only" style={{ marginBottom: 20 }}>
+              <Link href="/account" className="btn btn-ghost" style={{ width: "100%", justifyContent: "flex-start", gap: 8 }}>
+                ← Back to orders
+              </Link>
+            </div>
+
             <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>Order Details</h2>
             <div className="mono" style={{ fontSize: 13, color: "var(--text-soft)", marginBottom: 24 }}>#{selectedOrder.id}</div>
             

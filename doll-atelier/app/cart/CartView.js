@@ -12,6 +12,7 @@ export default function CartView({ products, loggedIn }) {
   const [shippingPhone, setShippingPhone] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showCheckout, setShowCheckout] = useState(false);
 
   useEffect(() => {
     loadCart();
@@ -98,7 +99,7 @@ export default function CartView({ products, loggedIn }) {
   return (
     <>
       {/* Center column: cart items */}
-      <div className="center-pane">
+      <div className={`center-pane ${showCheckout ? "hidden-mobile" : ""}`}>
         <h1 style={{ fontSize: 24, marginBottom: 6 }}>Shopping Cart</h1>
         <p style={{ color: "var(--text-soft)", marginBottom: 28 }}>Review your selected items and adjust quantities before placing order.</p>
 
@@ -197,12 +198,35 @@ export default function CartView({ products, loggedIn }) {
                 </span>
               </div>
             </div>
+
+            {/* Mobile Proceed Button */}
+            <div className="mobile-only" style={{ marginTop: 24, padding: "0 16px" }}>
+              <button
+                onClick={() => setShowCheckout(true)}
+                className="btn btn-primary btn-block"
+              >
+                Proceed to Checkout →
+              </button>
+            </div>
           </div>
         )}
       </div>
 
       {/* Right column: checkout shipping panel */}
-      <div className="details-pane">
+      <div className={`details-pane ${!showCheckout ? "hidden-mobile" : "show-mobile-full"}`}>
+        {/* Mobile Back Button */}
+        {cartItems.length > 0 && (
+          <div className="mobile-only" style={{ marginBottom: 20 }}>
+            <button
+              onClick={() => setShowCheckout(false)}
+              className="btn btn-ghost"
+              style={{ width: "100%", justifyContent: "flex-start", gap: 8 }}
+            >
+              ← Back to Cart
+            </button>
+          </div>
+        )}
+
         <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>Checkout</h2>
 
         {cartItems.length === 0 ? (

@@ -9,7 +9,8 @@ export default async function HomePage({ searchParams }) {
   const products = await db.product.findMany({ orderBy: { createdAt: "desc" } });
   
   const searchQuery = searchParams.q || "";
-  const activeCategory = searchParams.category || "All";
+  const activeCategory = searchParams.category || "Catelogs";
+  const activeSubCategory = searchParams.sub || "All Yarn";
   
   let filteredProducts = products;
   if (searchQuery) {
@@ -19,33 +20,64 @@ export default async function HomePage({ searchParams }) {
     );
   }
   
-  if (activeCategory !== "All") {
+  if (activeCategory !== "Catelogs") {
     filteredProducts = filteredProducts.filter(p => {
       const desc = p.description.toLowerCase();
       const name = p.name.toLowerCase();
-      if (activeCategory === "Plush Dolls") return desc.includes("plush") || name.includes("plush");
-      if (activeCategory === "Miniature") return desc.includes("mini") || name.includes("mini") || desc.includes("small") || name.includes("small");
-      if (activeCategory === "Knit Dolls") return desc.includes("knit") || name.includes("knit") || desc.includes("thread") || name.includes("thread") || desc.includes("crochet") || name.includes("crochet");
-      if (activeCategory === "Sewing Kits") return desc.includes("kit") || name.includes("kit") || desc.includes("set") || name.includes("set");
+      
+      if (activeCategory === "Toys") {
+        return desc.includes("toy") || name.includes("toy") || desc.includes("plush") || name.includes("plush") || desc.includes("doll") || name.includes("doll") || desc.includes("teddy") || name.includes("teddy");
+      }
+      if (activeCategory === "Yarn") {
+        const isYarn = desc.includes("yarn") || name.includes("yarn") || desc.includes("wool") || name.includes("wool") || desc.includes("thread") || name.includes("thread");
+        if (!isYarn) return false;
+        
+        if (activeSubCategory === "Cotton Yarn") {
+          return desc.includes("cotton") || name.includes("cotton");
+        }
+        if (activeSubCategory === "Chunky Yarn") {
+          return desc.includes("chunky") || name.includes("chunky");
+        }
+        return true; // "All Yarn"
+      }
+      if (activeCategory === "Crochet Kit") {
+        return desc.includes("kit") || name.includes("kit") || desc.includes("set") || name.includes("set");
+      }
+      if (activeCategory === "Bags") {
+        return desc.includes("bag") || name.includes("bag") || desc.includes("purse") || name.includes("purse") || desc.includes("tote") || name.includes("tote");
+      }
+      if (activeCategory === "Dresses") {
+        return desc.includes("dress") || name.includes("dress") || desc.includes("clothes") || name.includes("clothes") || desc.includes("skirt") || name.includes("skirt") || desc.includes("outfit") || name.includes("outfit");
+      }
       return true;
     });
   }
 
   const selectedId = searchParams.product;
   const selectedProduct = products.find(p => p.id === selectedId) || filteredProducts[0];
+  const hasSelection = !!selectedId;
   
   const user = getSessionUser();
-  const categories = ["All", "Plush Dolls", "Miniature", "Knit Dolls", "Sewing Kits"];
+  const categories = ["Catelogs", "Toys", "Yarn", "Crochet Kit", "Bags", "Dresses"];
+
+  // Compute back URL for mobile
+  let backUrl = "/";
+  const backParams = [];
+  if (activeCategory !== "Catelogs") backParams.push(`category=${encodeURIComponent(activeCategory)}`);
+  if (activeCategory === "Yarn" && activeSubCategory !== "All Yarn") backParams.push(`sub=${encodeURIComponent(activeSubCategory)}`);
+  if (searchQuery) backParams.push(`q=${encodeURIComponent(searchQuery)}`);
+  if (backParams.length > 0) backUrl += `?${backParams.join("&")}`;
 
   return (
-    <ShopLayout activePage="dolls" threeColumns={true}>
+    <ShopLayout activePage="dolls" threeColumns={true} hasSelection={hasSelection}>
       {/* Center column: product list */}
       <div className="center-pane">
         {/* Search */}
         <form action="/" method="GET" className="search-container">
           <span style={{ color: "var(--text-soft)" }}>🔍</span>
           <input name="q" defaultValue={searchQuery} placeholder="Search dolls..." className="search-input" />
-          {activeCategory !== "All" && <input type="hidden" name="category" value={activeCategory} />}
+          {activeCategory !== "Catelogs" && <input type="hidden" name="category" value={activeCategory} />}
+          {activeCategory === "Yarn" && activeSubCategory !== "All Yarn" && <input type="hidden" name="sub" value={activeSubCategory} />}
         </form>
 
         {/* Categories */}
@@ -63,6 +95,22 @@ export default async function HomePage({ searchParams }) {
               );
             })}
           </div>
+
+          {/* Subcategories (visible only when Yarn is active) */}
+          {activeCategory === "Yarn" && (
+            <div className="subcategories-grid" style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 12 }}>
+              {["All Yarn", "Cotton Yarn", "Chunky Yarn"].map((sub) => {
+                let url = `/?category=Yarn&sub=${encodeURIComponent(sub)}`;
+                if (searchQuery) url += `&q=${encodeURIComponent(searchQuery)}`;
+                const isActive = activeSubCategory === sub;
+                return (
+                  <Link key={sub} href={url} className={`category-pill ${isActive ? "active" : ""}`} style={{ fontSize: 12, padding: "6px 12px" }} scroll={false}>
+                    {sub}
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         <hr className="stitch-divider" />
@@ -88,7 +136,8 @@ export default async function HomePage({ searchParams }) {
                 
                 // Build link URL retaining filters
                 let linkUrl = `/?product=${p.id}`;
-                if (activeCategory !== "All") linkUrl += `&category=${encodeURIComponent(activeCategory)}`;
+                if (activeCategory !== "Catelogs") linkUrl += `&category=${encodeURIComponent(activeCategory)}`;
+                if (activeCategory === "Yarn" && activeSubCategory !== "All Yarn") linkUrl += `&sub=${encodeURIComponent(activeSubCategory)}`;
                 if (searchQuery) linkUrl += `&q=${encodeURIComponent(searchQuery)}`;
 
                 return (
@@ -131,6 +180,13 @@ export default async function HomePage({ searchParams }) {
       <div className="details-pane">
         {selectedProduct ? (
           <div>
+            {/* Mobile Back Button */}
+            <div className="mobile-only" style={{ marginBottom: 20 }}>
+              <Link href={backUrl} className="btn btn-ghost" style={{ width: "100%", justifyContent: "flex-start", gap: 8 }}>
+                ← Back to collection
+              </Link>
+            </div>
+
             <div
               style={{
                 width: "100%",

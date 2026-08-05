@@ -164,6 +164,10 @@ button {
   display: none;
 }
 
+.menu-backdrop {
+  display: none;
+}
+
 /* Helper utilities */
 .mobile-only {
   display: none !important;
@@ -171,6 +175,19 @@ button {
 
 .mobile-only-inline-flex {
   display: none !important;
+}
+
+.form-row-two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 576px) {
+  .form-row-two-columns {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
 }
 
 @media (max-width: 1200px) {
