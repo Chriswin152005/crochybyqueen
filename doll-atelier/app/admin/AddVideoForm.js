@@ -80,7 +80,7 @@ export default function AddVideoForm() {
 
   return (
     <form onSubmit={handleSubmit} className="card" style={{ padding: 20 }}>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+      <div className="form-grid-2">
         <div className="field">
           <label>Video title</label>
           <input value={title} onChange={(e) => setTitle(e.target.value)} required />
@@ -94,7 +94,7 @@ export default function AddVideoForm() {
         <label>Description</label>
         <textarea rows={3} value={description} onChange={(e) => setDescription(e.target.value)} required />
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+      <div className="form-grid-2">
         <div className="field">
           <label>Thumbnail image</label>
           <input type="file" accept="image/*" onChange={(e) => setThumbnail(e.target.files[0])} required />
