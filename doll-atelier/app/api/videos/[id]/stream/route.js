@@ -14,6 +14,7 @@ export async function GET(req, { params }) {
     return NextResponse.json({ error: "You haven't unlocked this video yet." }, { status: 403 });
   }
 
-  const url = generateSignedPlaybackUrl(params.id, user.id);
+  const url = await generateSignedPlaybackUrl(params.id, user.id);
   return NextResponse.json({ url });
 }
+

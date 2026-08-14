@@ -1,18 +1,20 @@
 import { NextResponse } from "next/server";
 import { requireRole } from "@/lib/auth";
-import { writeFile, mkdir } from "fs/promises";
+import { supabase } from "@/lib/supabase";
 import path from "path";
 import crypto from "crypto";
 
-// Owner-only. Accepts a multipart form with one "file" field and a "kind"
-// field ("photo" | "video"). Photos land in /public/uploads (servable
-// directly — they're not the thing we're protecting). Videos land in
-// /private-videos, OUTSIDE the public folder, so they can only ever be
-// reached through the signed-playback-token route in lib/video.js.
 export async function POST(req) {
   const owner = requireRole("OWNER");
   if (!owner) {
     return NextResponse.json({ error: "Owner login required." }, { status: 403 });
+  }
+
+  if (!supabase) {
+    return NextResponse.json(
+      { error: "Supabase client not configured. Check your env variables." },
+      { status: 500 }
+    );
   }
 
   const formData = await req.formData();
@@ -28,14 +30,34 @@ export async function POST(req) {
   const filename = `${crypto.randomUUID()}${ext}`;
 
   if (kind === "video") {
-    const dir = path.join(process.cwd(), "private-videos");
-    await mkdir(dir, { recursive: true });
-    await writeFile(path.join(dir, filename), bytes);
+    const { data, error } = await supabase.storage
+      .from("videos")
+      .upload(filename, bytes, {
+        contentType: file.type || "video/mp4",
+        duplex: "half",
+      });
+
+    if (error) {
+      return NextResponse.json({ error: `Video upload failed: ${error.message}` }, { status: 500 });
+    }
+
     return NextResponse.json({ storedPath: filename });
   } else {
-    const dir = path.join(process.cwd(), "public", "uploads");
-    await mkdir(dir, { recursive: true });
-    await writeFile(path.join(dir, filename), bytes);
-    return NextResponse.json({ url: `/uploads/${filename}` });
+    const { data, error } = await supabase.storage
+      .from("photos")
+      .upload(filename, bytes, {
+        contentType: file.type || "image/jpeg",
+        duplex: "half",
+      });
+
+    if (error) {
+      return NextResponse.json({ error: `Photo upload failed: ${error.message}` }, { status: 500 });
+    }
+
+    const { data: { publicUrl } } = supabase.storage
+      .from("photos")
+      .getPublicUrl(filename);
+
+    return NextResponse.json({ url: publicUrl });
   }
 }
