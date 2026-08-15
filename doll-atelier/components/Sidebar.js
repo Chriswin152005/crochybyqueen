@@ -38,7 +38,9 @@ export default function Sidebar({ activePage }) {
             <span style={{ fontSize: 16 }}>🧸</span>
             <span>Dolls Collection</span>
           </Link>
-          <CartNavLink active={activePage === "cart"} />
+          {(!user || user.role !== "OWNER") && (
+            <CartNavLink active={activePage === "cart"} />
+          )}
           <Link href="/learn" className={`nav-item ${activePage === "videos" ? "active" : ""}`}>
             <span style={{ fontSize: 16 }}>🎥</span>
             <span>Workshop Videos</span>

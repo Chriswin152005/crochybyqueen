@@ -1,8 +1,11 @@
 import Link from "next/link";
 import Sidebar from "./Sidebar";
 import MobileCartLink from "./MobileCartLink";
+import { getSessionUser } from "@/lib/auth";
 
 export default function ShopLayout({ children, activePage, threeColumns = true, hasSelection = false }) {
+  const user = getSessionUser();
+  const isOwner = user && user.role === "OWNER";
   const layoutClass = threeColumns ? "shop-layout" : "shop-layout-two-columns";
   return (
     <div className={`${layoutClass} ${hasSelection ? "has-selection" : ""}`}>
@@ -18,7 +21,7 @@ export default function ShopLayout({ children, activePage, threeColumns = true, 
           <img src="/logo.jpg" alt="Crochi by Queen Logo" className="mobile-logo" />
           <span>CROCHI BY QUEEN</span>
         </Link>
-        <MobileCartLink />
+        {!isOwner && <MobileCartLink />}
       </header>
 
       {/* Mobile Menu Backdrop */}
