@@ -55,6 +55,20 @@ function OrderRow({ order }) {
         <div style={{ fontSize: 13, color: "var(--ink-soft)", marginTop: 4 }}>
           {order.items.map((it) => `${it.product.name} ×${it.quantity}`).join(", ")}
         </div>
+        
+        {/* Shipping Details */}
+        <div style={{ 
+          fontSize: 13, 
+          marginTop: 10, 
+          padding: "8px 12px", 
+          background: "var(--bg-app)", 
+          borderRadius: "var(--radius-sm)", 
+          borderLeft: "3px solid var(--brand-purple)" 
+        }}>
+          <div style={{ marginBottom: 2 }}><strong>Recipient:</strong> {order.shippingName}</div>
+          <div style={{ marginBottom: 2 }}><strong>Address:</strong> {order.shippingAddr}</div>
+          <div><strong>Phone:</strong> {order.shippingPhone}</div>
+        </div>
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
         <span className="mono">{formatRupees(order.totalInPaise)}</span>
